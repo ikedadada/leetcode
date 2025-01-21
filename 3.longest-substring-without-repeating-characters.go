@@ -7,29 +7,26 @@ package main
  */
 
 // @lc code=start
+type LastIndex = int
+
 func lengthOfLongestSubstring(s string) int {
-	r := 0
+	start := 0
+	longest := 0
 
-	bs := []byte(s)
+	used := map[byte]LastIndex{}
 
-	for i := range bs {
+	for i := 0; i < len(s); i++ {
+		c := s[i]
 
-		us := map[byte]struct{}{
-			bs[i]: {},
+		// has been used and current is less than used index
+		if _, ok := used[c]; ok && start <= used[c] {
+			start = used[c] + 1
 		}
+		used[c] = i
 
-		for j := i + 1; j < len(s); j++ {
-			if _, ok := us[bs[j]]; ok {
-				break
-			}
-			us[bs[j]] = struct{}{}
-		}
-
-		if len(us) > r {
-			r = len(us)
-		}
+		longest = max(longest, i-start+1)
 	}
-	return r
+	return longest
 }
 
 // @lc code=end
